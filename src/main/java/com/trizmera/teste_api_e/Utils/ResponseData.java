@@ -1,16 +1,24 @@
 package com.trizmera.teste_api_e.Utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseData {
 
     private String id;
     private Integer balance;
     private String type;
     private String origin;
-    private String destination;
+    @JsonProperty("destination")
+    private Destination destination;
     private Integer amount;
 
     public ResponseData() {
+    }
+
+    public ResponseData(String destinationId, Integer balance) {
+        this.destination = new Destination(destinationId, balance);
     }
 
     public String getId() {
@@ -29,11 +37,11 @@ public class ResponseData {
         this.balance = balance;
     }
 
-    public String getDestination() {
+    public Destination getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(Destination destination) {
         this.destination = destination;
     }
 
@@ -59,5 +67,37 @@ public class ResponseData {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public static class Destination {
+        private String id;
+        private Integer balance;
+
+        public Destination(String id, Integer balance) {
+            this.id = id;
+            this.balance = balance;
+        }
+
+        public Destination() {
+
+        }
+
+        @JsonProperty("id")
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        @JsonProperty("balance")
+        public Integer getBalance() {
+            return balance;
+        }
+
+        public void setBalance(Integer balance) {
+            this.balance = balance;
+        }
     }
 }
