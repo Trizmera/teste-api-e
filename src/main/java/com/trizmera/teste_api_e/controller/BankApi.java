@@ -1,12 +1,12 @@
 package com.trizmera.teste_api_e.controller;
 
+import com.trizmera.teste_api_e.Utils.RequestData;
+import com.trizmera.teste_api_e.Utils.ResponseData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping
@@ -22,6 +22,8 @@ public interface BankApi {
     @GetMapping(value = "/balance{account_id}")
     public ResponseEntity<Void> balanceNoAccount() throws Exception;
 
-    
-
+    @Operation(summary = "Create account with initial balance")
+    @ApiResponse(responseCode = "201")
+    @PostMapping(value = "/event", consumes = {"application/json"}, produces = {"application/json"})
+    ResponseEntity<ResponseData> createAccount(@Valid @RequestBody RequestData request) throws Exception;
 }
