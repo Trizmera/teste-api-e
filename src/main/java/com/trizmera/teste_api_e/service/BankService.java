@@ -43,7 +43,7 @@ public class BankService {
             accounts.put(destination, currentBalance + amount);
         }
 
-        
+
         ResponseData response = new ResponseData();
         response.setDestination(new ResponseData.Destination(destination, accounts.get(destination)));
 
@@ -86,11 +86,7 @@ public class BankService {
         if (originBalance == null || originBalance < amount) {
             return null;
         }
-
-        if (!accounts.containsKey(destination)) {
-            return null;
-        }
-
+        
         int newOriginBalance = originBalance - amount;
         accounts.put(origin, newOriginBalance);
 
