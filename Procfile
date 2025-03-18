@@ -1,1 +1,1 @@
-web: java -jar target/your-application-name.jar
+web: java -jar target/teste-api-e.jar
