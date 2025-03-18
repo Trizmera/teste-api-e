@@ -54,18 +54,10 @@ public class BankService {
         String origin = request.getOrigin();
         int amount = request.getAmount();
 
-        if (!accounts.containsKey(origin)) {
-            ResponseData response = new ResponseData();
-            response.setOrigin(new ResponseData.Origin(origin, 0));
-            return response;
-        }
+        Integer currentBalance = accounts.get(origin);
 
-        int currentBalance = accounts.get(origin);
-
-        if (currentBalance < amount) {
-            ResponseData response = new ResponseData();
-            response.setOrigin(new ResponseData.Origin(origin, currentBalance));
-            return response;
+        if (currentBalance == null) {
+            return null;
         }
 
         int newBalance = currentBalance - amount;
@@ -86,7 +78,7 @@ public class BankService {
         if (originBalance == null || originBalance < amount) {
             return null;
         }
-        
+
         int newOriginBalance = originBalance - amount;
         accounts.put(origin, newOriginBalance);
 

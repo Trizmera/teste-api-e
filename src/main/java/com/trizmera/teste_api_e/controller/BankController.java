@@ -50,11 +50,8 @@ public class BankController implements BankApi {
 
     private ResponseEntity<?> withdraw(RequestData request) {
         ResponseData response = service.withdraw(request);
-        if (response.getOrigin() == null || response.getOrigin().getId() == null) {
+        if (response == null) {
             return ResponseEntity.status(404).body(0);
-        }
-        if (response.getOrigin().getBalance() < request.getAmount()) {
-            return ResponseEntity.status(400).body(0);
         }
         return ResponseEntity.status(201).body(response);
     }
