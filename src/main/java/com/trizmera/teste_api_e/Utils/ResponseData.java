@@ -9,7 +9,8 @@ public class ResponseData {
     private String id;
     private Integer balance;
     private String type;
-    private String origin;
+    @JsonProperty("origin")
+    private Destination origin;
     @JsonProperty("destination")
     private Destination destination;
     private Integer amount;
@@ -19,6 +20,9 @@ public class ResponseData {
 
     public ResponseData(String destinationId, Integer balance) {
         this.destination = new Destination(destinationId, balance);
+    }
+
+    public ResponseData(Destination destination, int balance) {
     }
 
     public String getId() {
@@ -45,11 +49,11 @@ public class ResponseData {
         this.destination = destination;
     }
 
-    public String getOrigin() {
+    public Destination getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(Destination origin) {
         this.origin = origin;
     }
 
@@ -79,7 +83,37 @@ public class ResponseData {
         }
 
         public Destination() {
+        }
 
+        @JsonProperty("id")
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        @JsonProperty("balance")
+        public Integer getBalance() {
+            return balance;
+        }
+
+        public void setBalance(Integer balance) {
+            this.balance = balance;
+        }
+    }
+
+    public static class Origin {
+        private String id;
+        private Integer balance;
+
+        public Origin(String id, Integer balance) {
+            this.id = id;
+            this.balance = balance;
+        }
+
+        public Origin() {
         }
 
         @JsonProperty("id")

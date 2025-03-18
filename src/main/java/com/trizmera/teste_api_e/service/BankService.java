@@ -20,32 +20,34 @@ public class BankService {
         return accounts.get(accountId);
     }
 
-    public ResponseData createAccount(RequestData request) {
-        String destination = request.getDestination();
-        Integer amount = request.getAmount();
-
-
-        accounts.put(destination, amount);
-
-        ResponseData response = new ResponseData();
-        ResponseData.Destination destinationAccount = new ResponseData.Destination();
-        destinationAccount.setId(destination);
-        destinationAccount.setBalance(amount);
-
-        response.setDestination(destinationAccount);
-        return response;
-    }
+//    public ResponseData createAccount(RequestData request) {
+//        String destination = request.getDestination();
+//        Integer amount = request.getAmount();
+//
+//        accounts.put(destination, amount);
+//
+//        ResponseData response = new ResponseData();
+//        response.setDestination(new ResponseData.Destination(destination, amount));
+//        return response;
+//    }
 
 
     public ResponseData deposit(RequestData request) {
         String destination = request.getDestination();
         int amount = request.getAmount();
 
-        int newBalance = accounts.getOrDefault(destination, 0) + amount;
-        accounts.put(destination, newBalance);
+        if (!accounts.containsKey(destination)) {
+            accounts.put(destination, amount);
+        }
 
-        return new ResponseData(destination, newBalance);
+        int newBalance = accounts.get(destination);
+        amount += newBalance;
+        accounts.put(destination, amount);
 
+        ResponseData response = new ResponseData();
+        response.setDestination(new ResponseData.Destination(destination, accounts.get(destination)));
+
+        return response;
     }
 
     public ResponseData withdraw(RequestData request) {
@@ -54,22 +56,15 @@ public class BankService {
 
         if (!accounts.containsKey(origin)) {
             ResponseData response = new ResponseData();
-            ResponseData.Destination destinationAccount = new ResponseData.Destination();
-            destinationAccount.setId(origin);
-            destinationAccount.setBalance(0); // Return balance as 0
-            response.setDestination(destinationAccount);
+            response.setOrigin(new ResponseData.Destination(origin, 0));
             return response;
         }
 
-        // If the account exists, proceed with the withdrawal logic
-        Integer currentBalance = accounts.get(origin);
+        int currentBalance = accounts.get(origin);
 
         if (currentBalance < amount) {
             ResponseData response = new ResponseData();
-            ResponseData.Destination destinationAccount = new ResponseData.Destination();
-            destinationAccount.setId(origin);
-            destinationAccount.setBalance(currentBalance); // No withdrawal, return current balance
-            response.setDestination(destinationAccount);
+            response.setOrigin(new ResponseData.Destination(origin, currentBalance));
             return response;
         }
 
@@ -77,10 +72,7 @@ public class BankService {
         accounts.put(origin, newBalance);
 
         ResponseData response = new ResponseData();
-        response.setDestination(new ResponseData.Destination());
-        response.getDestination().setId(origin);
-        response.getDestination().setBalance(newBalance);
-
+        response.setOrigin(new ResponseData.Destination(origin, newBalance));
         return response;
     }
 
@@ -95,12 +87,21 @@ public class BankService {
             return null;
         }
 
+        if (!accounts.containsKey(destination)) {
+            return null;
+        }
+
         int newOriginBalance = originBalance - amount;
         accounts.put(origin, newOriginBalance);
 
-        int newDestinationBalance = accounts.getOrDefault(destination, 0) + amount;
+        int newDestinationBalance = accounts.get(destination);
+        amount += newDestinationBalance;
         accounts.put(destination, newDestinationBalance);
 
-        return new ResponseData(origin, newOriginBalance);
+        ResponseData response = new ResponseData();
+        response.setOrigin(new ResponseData.Destination(origin, newOriginBalance));
+        response.setDestination(new ResponseData.Destination(destination, newDestinationBalance));
+
+        return response;
     }
 }
