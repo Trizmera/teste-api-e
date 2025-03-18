@@ -95,7 +95,7 @@ public class BankService {
         accounts.put(origin, newOriginBalance);
 
         int newDestinationBalance = accounts.get(destination);
-        amount += newDestinationBalance;
+        newDestinationBalance += amount;
         accounts.put(destination, newDestinationBalance);
 
         ResponseData response = new ResponseData();
