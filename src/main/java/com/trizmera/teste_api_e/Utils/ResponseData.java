@@ -10,7 +10,7 @@ public class ResponseData {
     private Integer balance;
     private String type;
     @JsonProperty("origin")
-    private Destination origin;
+    private Origin origin;
     @JsonProperty("destination")
     private Destination destination;
     private Integer amount;
@@ -49,11 +49,11 @@ public class ResponseData {
         this.destination = destination;
     }
 
-    public Destination getOrigin() {
+    public Origin getOrigin() {
         return origin;
     }
 
-    public void setOrigin(Destination origin) {
+    public void setOrigin(Origin origin) {
         this.origin = origin;
     }
 

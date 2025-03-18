@@ -15,7 +15,7 @@ public interface BankApi {
     @Operation(summary = "Reset the state before starting tests")
     @ApiResponse(responseCode = "200", description = "OK")
     @PostMapping("/reset")
-    public ResponseEntity<Void> resetAppState() throws Exception;
+    public ResponseEntity<?> resetAppState() throws Exception;
 
 
     @Operation(summary = "Get balance for account")

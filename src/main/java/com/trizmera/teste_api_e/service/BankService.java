@@ -40,9 +40,7 @@ public class BankService {
             accounts.put(destination, amount);
         }
 
-        int newBalance = accounts.get(destination);
-        amount += newBalance;
-        accounts.put(destination, amount);
+        accounts.compute(destination, (k, newBalance) -> newBalance);
 
         ResponseData response = new ResponseData();
         response.setDestination(new ResponseData.Destination(destination, accounts.get(destination)));
@@ -56,7 +54,7 @@ public class BankService {
 
         if (!accounts.containsKey(origin)) {
             ResponseData response = new ResponseData();
-            response.setOrigin(new ResponseData.Destination(origin, 0));
+            response.setOrigin(new ResponseData.Origin(origin, 0));
             return response;
         }
 
@@ -64,7 +62,7 @@ public class BankService {
 
         if (currentBalance < amount) {
             ResponseData response = new ResponseData();
-            response.setOrigin(new ResponseData.Destination(origin, currentBalance));
+            response.setOrigin(new ResponseData.Origin(origin, currentBalance));
             return response;
         }
 
@@ -72,7 +70,7 @@ public class BankService {
         accounts.put(origin, newBalance);
 
         ResponseData response = new ResponseData();
-        response.setOrigin(new ResponseData.Destination(origin, newBalance));
+        response.setOrigin(new ResponseData.Origin(origin, newBalance));
         return response;
     }
 
@@ -94,13 +92,21 @@ public class BankService {
         int newOriginBalance = originBalance - amount;
         accounts.put(origin, newOriginBalance);
 
-        int newDestinationBalance = accounts.get(destination);
-        newDestinationBalance += amount;
-        accounts.put(destination, newDestinationBalance);
+        Integer destBalance = accounts.getOrDefault(destination, 0);
+        int newDestBalance = destBalance + amount;
+        accounts.put(destination, newDestBalance);
 
         ResponseData response = new ResponseData();
-        response.setOrigin(new ResponseData.Destination(origin, newOriginBalance));
-        response.setDestination(new ResponseData.Destination(destination, newDestinationBalance));
+
+        ResponseData.Origin originAccount = new ResponseData.Origin();
+        originAccount.setId(origin);
+        originAccount.setBalance(newOriginBalance);
+        response.setOrigin(originAccount);
+
+        ResponseData.Destination destAccount = new ResponseData.Destination();
+        destAccount.setId(destination);
+        destAccount.setBalance(newDestBalance);
+        response.setDestination(destAccount);
 
         return response;
     }

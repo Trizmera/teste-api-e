@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import java.util.Collections;
+
 @Controller
 public class BankController implements BankApi {
 
@@ -14,9 +16,9 @@ public class BankController implements BankApi {
     private BankService service;
 
     @Override
-    public ResponseEntity<Void> resetAppState() throws Exception {
+    public ResponseEntity<?> resetAppState() throws Exception {
         service.reset();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("OK");
     }
 
     @Override
