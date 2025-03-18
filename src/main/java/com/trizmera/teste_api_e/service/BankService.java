@@ -38,10 +38,12 @@ public class BankService {
 
         if (!accounts.containsKey(destination)) {
             accounts.put(destination, amount);
+        } else {
+            int currentBalance = accounts.get(destination);
+            accounts.put(destination, currentBalance + amount);
         }
 
-        accounts.compute(destination, (k, newBalance) -> newBalance);
-
+        
         ResponseData response = new ResponseData();
         response.setDestination(new ResponseData.Destination(destination, accounts.get(destination)));
 
